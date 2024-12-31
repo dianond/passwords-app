@@ -17,24 +17,19 @@ import {
   BadgeProps,
   Tabs,
   RadioCards,
-  Heading,
   Separator,
   IconButton,
   Spinner,
-  ButtonProps,
   ThemeProps,
   Tooltip,
 } from "@radix-ui/themes";
 import {
   BookOpenIcon,
   CircleHelpIcon,
-  DraftingCompassIcon,
   FlaskConicalIcon,
   HashIcon,
   LightbulbIcon,
-  ShieldCheckIcon,
   ShuffleIcon,
-  SignatureIcon,
   SquareAsteriskIcon,
   WandIcon,
 } from "lucide-react";
@@ -45,37 +40,10 @@ import { useCopy, useDebounce, useLocalStorage, useTheme } from "./hooks";
 import natives from "./natives";
 import Hasher from "./components/Hasher";
 import Analyzer from "./components/Analyzer";
+import Principles from "./components/Principles";
 
 const ACCENT_COLOR_KEY = "passwords-app-accent-color";
 const DEFAULT_ACCENT_COLOR = "indigo";
-const COLORS: ButtonProps["color"][] = [
-  "gray",
-  "gold",
-  "bronze",
-  "brown",
-  "yellow",
-  "amber",
-  "orange",
-  "tomato",
-  "red",
-  "ruby",
-  "crimson",
-  "pink",
-  "plum",
-  "purple",
-  "violet",
-  "iris",
-  "indigo",
-  "blue",
-  "cyan",
-  "teal",
-  "jade",
-  "green",
-  "grass",
-  "lime",
-  "mint",
-  "sky",
-];
 
 const getStrengthString = (score: number): string => {
   if (score >= 0 && score < 20) {
@@ -593,61 +561,7 @@ function App() {
               <Analyzer />
             </Tabs.Content>
             <Tabs.Content value="principles">
-              <Flex direction="column" gap="2" p="2">
-                <Heading size="6" mb="2">
-                  The principles of generating a strong password
-                </Heading>
-                <Flex gap="4" align="center">
-                  <SignatureIcon strokeWidth={1} />
-                  <Heading size="5" align="center">
-                    Make it unique
-                  </Heading>
-                </Flex>
-                <Text size="3" color="gray" mb="2">
-                  Passwords should be unique to different accounts. This reduces
-                  the likelihood that multiple accounts of yours could be hacked
-                  if one of your passwords is exposed in a data breach.
-                </Text>
-                <Flex gap="4" align="center">
-                  <ShuffleIcon strokeWidth={1} />
-                  <Heading size="5" align="center">
-                    Make it random
-                  </Heading>
-                </Flex>
-                <Text size="3" color="gray" mb="2">
-                  The password has a combination of uppercase and lowercase
-                  letters, numbers, special characters, and words with no
-                  discernable pattern, unrelated to your personal information.
-                </Text>
-                <Flex gap="4" align="center">
-                  <DraftingCompassIcon strokeWidth={1} />
-                  <Heading size="5" align="center">
-                    Make it long
-                  </Heading>
-                </Flex>
-                <Text size="3" color="gray" mb="2">
-                  The password consists of 14 characters or longer. An
-                  8-character password will take a hacker 39 minutes to crack
-                  while a 16-character password will take a hacker a billion
-                  years to crack.
-                </Text>
-              </Flex>
-              <Flex gap="2" wrap="wrap" align="center" justify="center" my="4">
-                {COLORS.map((color) => (
-                  <IconButton
-                    color={color}
-                    size="1"
-                    value={color}
-                    key={color}
-                    onClick={(e) => {
-                      setThemeColorValue(e.currentTarget.value);
-                    }}
-                  ></IconButton>
-                ))}
-              </Flex>
-              <Flex align="center" justify="center" p="2">
-                <ShieldCheckIcon size={32} color="gray" strokeWidth={1} />
-              </Flex>
+              <Principles setThemeColorValue={setThemeColorValue} />
             </Tabs.Content>
           </Box>
         </Tabs.Root>
