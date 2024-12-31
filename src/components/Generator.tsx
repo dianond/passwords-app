@@ -5,21 +5,14 @@ import {
   Button,
   Grid,
   Card,
-  Slider,
-  TextField,
   Box,
-  Switch,
   Badge,
   DataList,
   BadgeProps,
   RadioCards,
-  Separator,
-  IconButton,
   Spinner,
-  Tooltip,
 } from "@radix-ui/themes";
 import {
-  CircleHelpIcon,
   LightbulbIcon,
   ShuffleIcon,
   SquareAsteriskIcon,
@@ -32,6 +25,9 @@ import {
   getStrengthString,
   getStrengthColor,
 } from "../utils";
+import RandomPart from "./RandomPart";
+import MemorablePart from "./MemorablePart";
+import PinPart from "./PinPart";
 
 export default function Generator() {
   const [passwordType, setPasswordType] = useState("random");
@@ -186,149 +182,35 @@ export default function Generator() {
         </RadioCards.Root>
         <Text weight="medium">Customize your password</Text>
         {passwordType === "random" ? (
-          <Flex direction="column" gap="4" my="2">
-            <Flex gap="4" align="center">
-              <Text color="gray">Characters</Text>
-              <Slider
-                value={[randomLength]}
-                onValueChange={(values) => setRandomLength(values[0])}
-                min={4}
-                max={128}
-              />
-              <Box width="50px">
-                <TextField.Root
-                  size="1"
-                  type="number"
-                  min="4"
-                  max="128"
-                  value={randomLength}
-                  readOnly
-                />
-              </Box>
-            </Flex>
-            <Separator size="4" />
-            <Flex gap="4" align="center" wrap="wrap">
-              <Text color="gray">Numbers</Text>
-              <Switch
-                checked={randomNumbers}
-                onCheckedChange={setRandomNumbers}
-              />
-              <Text color="gray">Symbols</Text>
-              <Switch
-                checked={randomSymbols}
-                onCheckedChange={setRandomSymbols}
-              />
-              <Text color="gray">Uppercase</Text>
-              <Switch
-                checked={randomUppercase}
-                onCheckedChange={setRandomUppercase}
-              />
-            </Flex>
-            <Separator size="4" />
-            <Flex gap="4" align="center" wrap="wrap">
-              <Flex align="center" wrap="wrap" gap="1">
-                <Text color="gray">Exclude similar characters</Text>
-                <Tooltip content={"iI1loO0\"'`|"}>
-                  <IconButton variant="ghost" size="1">
-                    <CircleHelpIcon size={16} color="gray" />
-                  </IconButton>
-                </Tooltip>
-              </Flex>
-              <Switch
-                checked={randomExcludeSimilarChars}
-                onCheckedChange={setRandomExcludeSimilarChars}
-              />
-              <Text color="gray">Strict</Text>
-              <Switch
-                checked={randomStrict}
-                onCheckedChange={setRandomStrict}
-              />
-            </Flex>
-          </Flex>
+          <RandomPart
+            randomLength={randomLength}
+            randomSymbols={randomSymbols}
+            randomNumbers={randomNumbers}
+            randomUppercase={randomUppercase}
+            randomExcludeSimilarChars={randomExcludeSimilarChars}
+            randomStrict={randomStrict}
+            setRandomLength={setRandomLength}
+            setRandomSymbols={setRandomSymbols}
+            setRandomNumbers={setRandomNumbers}
+            setRandomUppercase={setRandomUppercase}
+            setRandomExcludeSimilarChars={setRandomExcludeSimilarChars}
+            setRandomStrict={setRandomStrict}
+          />
         ) : passwordType === "memorable" ? (
-          <Flex my="2" direction="column" gap="4">
-            <Flex gap="4" align="center">
-              <Text color="gray">Characters</Text>
-              <Slider
-                value={[memorableLength]}
-                onValueChange={(values) => setMemorableLength(values[0])}
-                min={3}
-                max={20}
-              />
-              <Box width="50px">
-                <TextField.Root
-                  size="1"
-                  type="number"
-                  min="3"
-                  max="20"
-                  value={memorableLength}
-                  readOnly
-                />
-              </Box>
-            </Flex>
-            <Separator size="4" />
-            <Flex gap="4" align="center">
-              <Text color="gray">Capitalize</Text>
-              <Switch
-                checked={memorableCapitalize}
-                onCheckedChange={(checked) => {
-                  setMemorableCapitalize(checked);
-                  if (checked) {
-                    setMemorableUppercase(false);
-                  }
-                }}
-              />
-              <Text color="gray">Uppercase</Text>
-              <Switch
-                checked={memorableUppercase}
-                onCheckedChange={(checked) => {
-                  setMemorableUppercase(checked);
-                  if (checked) {
-                    setMemorableCapitalize(false);
-                  }
-                }}
-              />
-            </Flex>
-            <Separator size="4" />
-            <Flex gap="4" align="center">
-              <Text color="gray">Use full words</Text>
-              <Switch
-                checked={memorableUseFullWords}
-                onCheckedChange={setMemorableUseFullWords}
-              />
-              <Text color="gray">Separator</Text>
-              <Box width="100px">
-                <TextField.Root
-                  size="2"
-                  maxLength={10}
-                  value={memorableSeparator}
-                  onChange={(e) => setMemorableSeparator(e.currentTarget.value)}
-                />
-              </Box>
-            </Flex>
-          </Flex>
+          <MemorablePart
+            memorableLength={memorableLength}
+            memorableUseFullWords={memorableUseFullWords}
+            memorableCapitalize={memorableCapitalize}
+            memorableUppercase={memorableUppercase}
+            memorableSeparator={memorableSeparator}
+            setMemorableLength={setMemorableLength}
+            setMemorableUseFullWords={setMemorableUseFullWords}
+            setMemorableCapitalize={setMemorableCapitalize}
+            setMemorableUppercase={setMemorableUppercase}
+            setMemorableSeparator={setMemorableSeparator}
+          />
         ) : (
-          <Flex my="2" direction="column" gap="4">
-            <Flex gap="4" align="center">
-              <Text color="gray">Characters</Text>
-              <Slider
-                value={[pinLength]}
-                onValueChange={(values) => setPinLength(values[0])}
-                min={3}
-                max={12}
-              />
-              <Box width="50px">
-                <TextField.Root
-                  size="1"
-                  type="number"
-                  min="3"
-                  max="12"
-                  value={pinLength}
-                  readOnly
-                />
-              </Box>
-            </Flex>
-          </Flex>
+          <PinPart pinLength={pinLength} setPinLength={setPinLength} />
         )}
         <Text weight="medium" my="2">
           Generated Password
