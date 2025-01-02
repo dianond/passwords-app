@@ -56,21 +56,19 @@ export default function Generator() {
   const handlePasswordGeneration = useCallback(() => {
     switch (passwordType) {
       case "random":
-        setIsGenerating(true);
         generateRandomPassword();
         break;
       case "memorable":
-        setIsGenerating(true);
         generateWords();
         break;
       case "pin":
-        setIsGenerating(true);
         generatePin();
         break;
     }
   }, [passwordType]);
 
   async function generateRandomPassword() {
+    setIsGenerating(true);
     const pass: string = await natives.generatePassword({
       length: randomLength,
       symbols: randomSymbols,
@@ -92,6 +90,7 @@ export default function Generator() {
   }
 
   async function generateWords() {
+    setIsGenerating(true);
     const words: string[] = await natives.generateWords(
       memorableLength,
       memorableUseFullWords
@@ -111,13 +110,13 @@ export default function Generator() {
   }
 
   async function generatePin() {
+    setIsGenerating(true);
     setPassword(await natives.generatePin(pinLength));
     setIsGenerating(false);
     resetCopyStatus();
   }
 
   useEffect(() => {
-    setIsGenerating(true);
     generateRandomPassword();
   }, [
     randomLengthDebounce,
@@ -129,7 +128,6 @@ export default function Generator() {
   ]);
 
   useEffect(() => {
-    setIsGenerating(true);
     generateWords();
   }, [
     memorableLengthDebounce,
@@ -140,7 +138,6 @@ export default function Generator() {
   ]);
 
   useEffect(() => {
-    setIsGenerating(true);
     generatePin();
   }, [pinLengthDebounce]);
 
@@ -217,11 +214,7 @@ export default function Generator() {
         <Text weight="medium" my="2">
           Generated Password
         </Text>
-        <Card
-          onDoubleClick={async () => {
-            copy();
-          }}
-        >
+        <Card onDoubleClick={copy}>
           <Flex minHeight="80px" align="center" justify="center" p="2">
             <Flex
               wrap="wrap"
@@ -273,9 +266,7 @@ export default function Generator() {
             size="3"
             variant="solid"
             color={isCopied ? "green" : undefined}
-            onClick={async () => {
-              copy();
-            }}
+            onClick={copy}
           >
             {isCopied ? "Password Copied!" : "Copy Password"}
           </Button>
