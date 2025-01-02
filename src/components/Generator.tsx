@@ -54,19 +54,20 @@ export default function Generator() {
   const { isCopied, copyToClipboard, resetCopyStatus } = useCopy();
 
   const handlePasswordGeneration = useCallback(() => {
-    setIsGenerating(true);
     switch (passwordType) {
       case "random":
+        setIsGenerating(true);
         generateRandomPassword();
         break;
       case "memorable":
+        setIsGenerating(true);
         generateWords();
         break;
       case "pin":
+        setIsGenerating(true);
         generatePin();
         break;
     }
-    setIsGenerating(false);
   }, [passwordType]);
 
   async function generateRandomPassword() {
