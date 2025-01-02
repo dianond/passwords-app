@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   Flex,
   Text,
@@ -12,11 +12,7 @@ import {
   RadioCards,
   Spinner,
 } from "@radix-ui/themes";
-import {
-  LightbulbIcon,
-  ShuffleIcon,
-  SquareAsteriskIcon,
-} from "lucide-react";
+import { LightbulbIcon, ShuffleIcon, SquareAsteriskIcon } from "lucide-react";
 import { useCopy, useDebounce } from "../hooks";
 import natives from "../natives";
 import {
@@ -56,6 +52,22 @@ export default function Generator() {
   const pinLengthDebounce = useDebounce(pinLength, 200);
 
   const { isCopied, copyToClipboard, resetCopyStatus } = useCopy();
+
+  const handlePasswordGeneration = useCallback(() => {
+    setIsGenerating(true);
+    switch (passwordType) {
+      case "random":
+        generateRandomPassword();
+        break;
+      case "memorable":
+        generateWords();
+        break;
+      case "pin":
+        generatePin();
+        break;
+    }
+    setIsGenerating(false);
+  }, [passwordType]);
 
   async function generateRandomPassword() {
     const pass: string = await natives.generatePassword({
@@ -135,18 +147,7 @@ export default function Generator() {
     await copyToClipboard(password);
   };
 
-  useEffect(() => {
-    if (passwordType === "random") {
-      setIsGenerating(true);
-      generateRandomPassword();
-    } else if (passwordType === "memorable") {
-      setIsGenerating(true);
-      generateWords();
-    } else if (passwordType === "pin") {
-      setIsGenerating(true);
-      generatePin();
-    }
-  }, [passwordType]);
+  useEffect(() => handlePasswordGeneration(), [handlePasswordGeneration]);
 
   return (
     <>
@@ -280,18 +281,7 @@ export default function Generator() {
           <Button
             size="3"
             variant="outline"
-            onClick={() => {
-              if (passwordType === "random") {
-                setIsGenerating(true);
-                generateRandomPassword();
-              } else if (passwordType === "memorable") {
-                setIsGenerating(true);
-                generateWords();
-              } else if (passwordType === "pin") {
-                setIsGenerating(true);
-                generatePin();
-              }
-            }}
+            onClick={() => handlePasswordGeneration()}
           >
             Refresh Password
           </Button>
