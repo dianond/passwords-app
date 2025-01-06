@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import {
   Flex,
   Text,
@@ -12,7 +12,11 @@ import {
   RadioCards,
   Spinner,
 } from "@radix-ui/themes";
-import { LightbulbIcon, ShuffleIcon, SquareAsteriskIcon } from "lucide-react";
+import {
+  LightbulbIcon,
+  ShuffleIcon,
+  SquareAsteriskIcon,
+} from "lucide-react";
 import { useCopy, useDebounce } from "../hooks";
 import natives from "../natives";
 import {
@@ -53,22 +57,7 @@ export default function Generator() {
 
   const { isCopied, copyToClipboard, resetCopyStatus } = useCopy();
 
-  const handlePasswordGeneration = useCallback(() => {
-    switch (passwordType) {
-      case "random":
-        generateRandomPassword();
-        break;
-      case "memorable":
-        generateWords();
-        break;
-      case "pin":
-        generatePin();
-        break;
-    }
-  }, [passwordType]);
-
   async function generateRandomPassword() {
-    setIsGenerating(true);
     const pass: string = await natives.generatePassword({
       length: randomLength,
       symbols: randomSymbols,
@@ -90,7 +79,6 @@ export default function Generator() {
   }
 
   async function generateWords() {
-    setIsGenerating(true);
     const words: string[] = await natives.generateWords(
       memorableLength,
       memorableUseFullWords
@@ -110,13 +98,13 @@ export default function Generator() {
   }
 
   async function generatePin() {
-    setIsGenerating(true);
     setPassword(await natives.generatePin(pinLength));
     setIsGenerating(false);
     resetCopyStatus();
   }
 
   useEffect(() => {
+    setIsGenerating(true);
     generateRandomPassword();
   }, [
     randomLengthDebounce,
@@ -128,6 +116,7 @@ export default function Generator() {
   ]);
 
   useEffect(() => {
+    setIsGenerating(true);
     generateWords();
   }, [
     memorableLengthDebounce,
@@ -138,6 +127,7 @@ export default function Generator() {
   ]);
 
   useEffect(() => {
+    setIsGenerating(true);
     generatePin();
   }, [pinLengthDebounce]);
 
@@ -145,7 +135,18 @@ export default function Generator() {
     await copyToClipboard(password);
   };
 
-  useEffect(() => handlePasswordGeneration(), [handlePasswordGeneration]);
+  useEffect(() => {
+    if (passwordType === "random") {
+      setIsGenerating(true);
+      generateRandomPassword();
+    } else if (passwordType === "memorable") {
+      setIsGenerating(true);
+      generateWords();
+    } else if (passwordType === "pin") {
+      setIsGenerating(true);
+      generatePin();
+    }
+  }, [passwordType]);
 
   return (
     <>
@@ -214,7 +215,11 @@ export default function Generator() {
         <Text weight="medium" my="2">
           Generated Password
         </Text>
-        <Card onDoubleClick={copy}>
+        <Card
+          onDoubleClick={async () => {
+            copy();
+          }}
+        >
           <Flex minHeight="80px" align="center" justify="center" p="2">
             <Flex
               wrap="wrap"
@@ -266,14 +271,27 @@ export default function Generator() {
             size="3"
             variant="solid"
             color={isCopied ? "green" : undefined}
-            onClick={copy}
+            onClick={async () => {
+              copy();
+            }}
           >
             {isCopied ? "Password Copied!" : "Copy Password"}
           </Button>
           <Button
             size="3"
             variant="outline"
-            onClick={() => handlePasswordGeneration()}
+            onClick={() => {
+              if (passwordType === "random") {
+                setIsGenerating(true);
+                generateRandomPassword();
+              } else if (passwordType === "memorable") {
+                setIsGenerating(true);
+                generateWords();
+              } else if (passwordType === "pin") {
+                setIsGenerating(true);
+                generatePin();
+              }
+            }}
           >
             Refresh Password
           </Button>
