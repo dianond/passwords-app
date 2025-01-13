@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getCurrentWindow, LogicalSize } from "@tauri-apps/api/window";
 import useResizeObserver from "use-resize-observer";
 import { Flex, Theme, Box, Tabs, ThemeProps } from "@radix-ui/themes";
@@ -39,6 +39,18 @@ function App() {
       }
     },
   });
+
+  useEffect(() => {
+    // disable context menu
+    document.addEventListener(
+      "contextmenu",
+      (e) => {
+        e.preventDefault();
+        return false;
+      },
+      { capture: true }
+    );
+  }, []);
 
   return (
     <Theme
